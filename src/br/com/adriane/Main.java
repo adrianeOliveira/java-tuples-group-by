@@ -3,9 +3,11 @@ package br.com.adriane;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.javatuples.Pair;
 
 public class Main {
@@ -26,6 +28,11 @@ public class Main {
         Map<Pair<String, Integer>, BigDecimal> groupByCodeAndId = new HashMap<>();
         bag.products.forEach(product -> groupByCodeAndId.merge(Pair.with(product.code, product.id), product.value, BigDecimal::add));
         System.out.printf("Agrupamento por código e ID: %s\n", groupByCodeAndId);
+
+        //acessar as chaves
+        ArrayList<Pair<String, Integer>> listOfPair = new ArrayList<>(groupByCodeAndId.keySet());
+//        listOfPair.forEach(System.out::println);
+        listOfPair.forEach(pair -> System.out.printf("Pair: \t(%s, %d)\n", pair.getValue0(), pair.getValue1()));
     }
 }
 
