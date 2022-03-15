@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.data.util.Pair;
 
 public class Main {
 
@@ -27,13 +29,16 @@ public class Main {
         System.out.printf("Agrupamento por código e ID: %s\n", groupByCodeAndId);*/
 
         //agrupar por chave composta
-        Map<CompoundKey, BigDecimal> groupByCodeAndId = new HashMap<>();
-        bag.products.forEach(product -> groupByCodeAndId.merge(new CompoundKey(product.id, bag.code), product.value, BigDecimal::add));
+        /*Map<CompoundKey, BigDecimal> groupByCodeAndId = new HashMap<>();
+        bag.products.forEach(product -> groupByCodeAndId.merge(new CompoundKey(product.id, bag.code), product.value, BigDecimal::add));*/
+
+        Map<Pair<Integer, String>, Double> groupByCodeAndId = bag.products.stream()
+                .collect(Collectors.groupingBy(p -> Pair.of(p.id, bag.code), Collectors.summingDouble(p -> p.value.doubleValue())));
+        System.out.printf("Agrupamento por Pair: %s\n", groupByCodeAndId);
 
         //acessar as chaves
-        ArrayList<CompoundKey> compoundKeyList = new ArrayList<>(groupByCodeAndId.keySet());
-//        listOfPair.forEach(System.out::println);
-        compoundKeyList.forEach(compoundKey -> System.out.printf("Pair: \t(%s, %d)\n", compoundKey.code, compoundKey.productId));
+        ArrayList<Pair<Integer, String>> compoundKeyList = new ArrayList<>(groupByCodeAndId.keySet());
+        compoundKeyList.forEach(compoundKey -> System.out.printf("Pair: \t(%d, %s)\n", compoundKey.getFirst(), compoundKey.getSecond()));
     }
 }
 
